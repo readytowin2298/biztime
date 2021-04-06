@@ -12,9 +12,7 @@ app.use(express.json());
 
 app.use('/companies', companyRouter)
 
-app.get('/', (req, res, next) => {
-  res.send('Hi')
-});
+
 
 
 /** 404 handler */
