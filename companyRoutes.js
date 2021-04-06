@@ -56,6 +56,10 @@ router.post('/', async function(req, res, next){
 router.put('/:code', async function(req, res, next){
     const {code} = req.params
     let company;
+    let {name, description} = req.body
+    if(!name && !description){
+        res.status(404).json({"ERROR" : "Request is improperly formatted, either `name` or `description` values must be present"})
+    }
     try {
         const quest = await db.query('SELECT * FROM companies WHERE code=$1--', [code])
         company = quest.rows[0]
@@ -65,8 +69,18 @@ router.put('/:code', async function(req, res, next){
     if(!company){
         return res.status(404).json({"ERROR" : "Can't locate that company"})
     }
-    
-    return res.json(company)
+    name = name? name : company.name;
+    description = description ? description : company.description;
+    try {
+        const edit = await db.query(`UPDATE companies SET name=$1, description=$2 WHERE code=$3;`, [name, description, code])
+    } catch(err){
+        return next(err)
+    }
+    return res.json({"Success!" : {
+        "name" : name,
+        "code" : code,
+        "description" : description
+    }})
     
 })
 
