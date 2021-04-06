@@ -84,6 +84,26 @@ router.put('/:code', async function(req, res, next){
     
 })
 
+router.delete('/:code', async function(req, res, next){
+    const {code} = req.params;
+    let company;
+    try{
+        company = await db.query(`SELECT * FROM companies WHERE code=$1`, [code]);
+    }catch(err){
+        return next(err)
+    }
+    if(!company){
+        return res.status(404).json({"ERROR" : "Can't locate that company"})
+    } else{
+        try{
+            await db.query(`DELETE FROM companies WHERE code=$1`, [code]);
+            return res.json({"status" : "deleted"})
+        } catch(err){
+            return next(err)
+        }
+    }
+})
+
 
 
 
