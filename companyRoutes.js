@@ -24,11 +24,33 @@ router.get('/:code', async function(req, res, next){
             return res.json({"company" : company.rows[0]})
         }
         else{
+            res.status(404).json({"Error" : `Cannot locate ${code} in our databases`})
             return new ExpressError(`Cannot locate ${code} in our databases`, 404)
         }
     } catch (err){
         next(err)
     }
+})
+
+router.post('/', async function(req, res, next){
+    if(!req.body.code || !req.body.name ){
+        res.status(404).json({
+            "Error" : "Input data missing",
+            "Example Request" : {
+                "code" : "nli",
+                "name" : "Nextlink Internet",
+                "description" : "Sucky internet company that serves rural areas"
+            }
+        })
+    }
+    let {code, name, description} = req.body;
+    try{
+        const { rows } = await db.query("INSERT INTO companies (name, code, description) VALUES ($1, $2, $3) RETURNING name, code, description;", [name, code, description])
+        res.status(201).json(rows[0])
+    }catch(err){
+        next(err)
+    }
+    
 })
 
 
