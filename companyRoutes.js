@@ -46,10 +46,27 @@ router.post('/', async function(req, res, next){
     let {code, name, description} = req.body;
     try{
         const { rows } = await db.query("INSERT INTO companies (name, code, description) VALUES ($1, $2, $3) RETURNING name, code, description;", [name, code, description])
-        res.status(201).json(rows[0])
+        return res.status(201).json(rows[0])
     }catch(err){
         next(err)
     }
+    
+})
+
+router.put('/:code', async function(req, res, next){
+    const {code} = req.params
+    let company;
+    try {
+        const quest = await db.query('SELECT * FROM companies WHERE code=$1--', [code])
+        company = quest.rows[0]
+    } catch(err){
+        next(err)
+    }
+    if(!company){
+        return res.status(404).json({"ERROR" : "Can't locate that company"})
+    }
+    
+    return res.json(company)
     
 })
 
