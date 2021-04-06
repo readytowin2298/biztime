@@ -7,6 +7,15 @@ const companyRouter = require('./companyRoutes')
 const ExpressError = require("./expressError")
 
 
+/** Use JSON */
+app.use(express.json());
+
+app.use('/companies', companyRouter)
+
+app.get('/', (req, res, next) => {
+  res.send('Hi')
+});
+
 
 /** 404 handler */
 
@@ -26,13 +35,5 @@ app.use((err, req, res, next) => {
   });
 });
 
-/** Use JSON */
-app.use(express.json());
-
-app.use('/companies', companyRouter)
-
-app.get('/', (req, res, next) => {
-  res.send('Hi')
-});
 
 module.exports = app;

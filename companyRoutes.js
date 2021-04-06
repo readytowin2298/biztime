@@ -5,7 +5,7 @@ const db = require('./db')
 
 
 router.get('/', (req, res, next) => {
-    res.send('Hi')
+    res.json('Hi')
 });
 
 
