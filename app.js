@@ -3,7 +3,8 @@
 const express = require("express");
 const db = require('./db')
 const app = express();
-const companyRouter = require('./routes/companies.js')
+const companyRouter = require('./routes/companies')
+const invoiceRouter = require('./routes/invoices')
 const ExpressError = require("./expressError")
 
 
@@ -12,6 +13,7 @@ app.use(express.json());
 
 app.use('/companies', companyRouter)
 
+app.use('/invoices', invoiceRouter)
 
 
 
