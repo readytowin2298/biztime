@@ -3,7 +3,7 @@
 const express = require("express");
 const db = require('./db')
 const app = express();
-const companyRouter = require('./companyRoutes')
+const companyRouter = require('./routes/companies.js')
 const ExpressError = require("./expressError")
 
 
