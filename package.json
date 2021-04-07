@@ -21,5 +21,8 @@
     "pg": "^8.5.1"
   },
   "keywords": [],
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "supertest": "^6.1.3"
+  }
 }
