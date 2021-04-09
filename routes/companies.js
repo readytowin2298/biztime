@@ -7,8 +7,16 @@ const ExpressError = require('../expressError');
 
 router.get('/', async function(req, res, next) {
     try{
-        const {rows} = await db.query("SELECT * FROM companies RIGHT JOIN invoices ON companies.code = invoices.comp_code")
-    return res.json({"companies": rows})
+        const companies = await db.query("SELECT * FROM companies")
+        // console.log("COMPANIES", companies.rows)
+        const invoices = await db.query("SELECT * FROM invoices")
+        // console.log("INVOICES", invoices.rows)
+        for(let i = 0; i<companies.rows.length; i++){
+            let company = companies.rows[i];
+            console.log("COMPANY: ", company)
+            company.invoices = invoices.rows.filter(invoice => invoice.comp_code === company.code)
+        }
+        return res.json({"companies" : companies.rows})
     } catch (err){
         next(err)
     }
