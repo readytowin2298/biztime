@@ -8,12 +8,9 @@ const ExpressError = require('../expressError');
 router.get('/', async function(req, res, next) {
     try{
         const companies = await db.query("SELECT * FROM companies")
-        // console.log("COMPANIES", companies.rows)
         const invoices = await db.query("SELECT * FROM invoices")
-        // console.log("INVOICES", invoices.rows)
         for(let i = 0; i<companies.rows.length; i++){
             let company = companies.rows[i];
-            console.log("COMPANY: ", company)
             company.invoices = invoices.rows.filter(invoice => invoice.comp_code === company.code)
         }
         return res.json({"companies" : companies.rows})
@@ -26,7 +23,6 @@ router.get('/', async function(req, res, next) {
 router.get('/:code', async function(req, res, next){
     try{
         const code = req.params.code
-        console.log(code)
         const company = await db.query(`SELECT * FROM companies WHERE code=$1`, [code])
         if (company.rows.length >= 1){
             return res.json({"company" : company.rows[0]})

@@ -8,20 +8,17 @@ const ExpressError = require('../expressError');
 
 
 router.get('/', async function(req, res, next){
-    let quest;
     try{
-        quest = await db.query(`SELECT * FROM invoices;`);
+        const invoices = await db.query(`SELECT * FROM invoices;`);
+        return res.json({"invoices" : invoices.rows})
     }catch(err){
         return next(err)
     }
-    data = quest.rows
-    return res.json({"invoices" : data})
 })
 
 router.get('/:id', async function(req, res, next){
     try{
         const id = req.params.id
-        console.log(id)
         const company = await db.query(`SELECT * FROM invoices WHERE id=$1`, [id])
         if (company.rows.length >= 1){
             return res.json({"invoice" : company.rows[0]})

@@ -1,9 +1,9 @@
 process.env.NODE_ENV = "test";
 
 const request = require("supertest");
-const db = require("../examples/cats-api/db");
+const db = require("../db");
 
-const app = require("./app");
+const app = require("../app");
 
 beforeEach(async function(){
     const companies = await db.query(`INSERT INTO companies
@@ -19,12 +19,33 @@ beforeEach(async function(){
 
 describe("GET companies", function(){
     test("gets all companies", async function(){
-        const response = request(app).get('/companies');
-        
+        const response = await request(app).get('/companies');
+        expect(response);
+        expect(response.statusCode).toBe(200);
+        expect(response.body.companies.length).toBeGreaterThan(0);
+        expect(response.body.companies[0].invoices.length).toBeGreaterThan(0);
     })
+    test("get only apple", async function(){
+        const response = await request(app).get('/companies/apple')
+        expect(response);
+        expect(response.statusCode).toBe(200);
+        expect(response.body)
+        expect(response.body.company.code).toBe("apple")
+        expect(response.body.company.name).toBe("Apple Computer")
+    })
+
 })
 
-
+describe("GET invoices", function(){
+    test("gets all invoices", async function(){
+        const response = await request(app).get('/invoices')
+        const testInvoice = response.body.invoices[0]
+        expect(response);
+        expect(response.statusCode).toBe(200);
+        expect(response.body.invoices.length).toBeGreaterThan(0);
+        expect(testInvoice).toHaveProperty('comp_code', 'apple')
+    })
+})
 
 
 
