@@ -33,20 +33,65 @@ describe("GET companies", function(){
         expect(response.body.company.code).toBe("apple")
         expect(response.body.company.name).toBe("Apple Computer")
     })
-
-})
-
-describe("GET invoices", function(){
-    test("gets all invoices", async function(){
-        const response = await request(app).get('/invoices')
-        const testInvoice = response.body.invoices[0]
-        expect(response);
-        expect(response.statusCode).toBe(200);
-        expect(response.body.invoices.length).toBeGreaterThan(0);
-        expect(testInvoice).toHaveProperty('comp_code', 'apple')
+    test("Get a company that isn't there", async () => {
+        const response = await request(app).get('/companies/alcon');
+        expect(response.statusCode).toBe(404);
+        expect(response.body).toHaveProperty("ERROR");
     })
 })
 
+describe("POST to companies", function(){
+    test("Create a new company", async function(){
+        const response = await request(app)
+            .post('/companies')
+            .send({
+                "code" : "nli",
+                "name" : "Nextlink Internet",
+                "description" : "Sucky internet company that serves rural areas"
+            });
+        const response1 = await request(app).get('/companies')
+
+        expect(response)
+        expect(response.statusCode).toBe(201);
+        expect(response.body).toHaveProperty('code', 'nli');
+        expect(response1.body.companies[response1.body.companies.length -1]).toHaveProperty('code', 'nli');
+
+    })
+    test("Invalid Post", async () => {
+        const response = await request(app)
+            .post('/companies')
+            .send({
+                "name" : "springboard",
+                "description" : "An Awesome School!"
+            })
+        expect(response.statusCode).toBe(404);
+        expect(response.body).toHaveProperty("ERROR");
+    })
+})
+
+describe("PUT companies", function(){
+    test("Valid edit", async () => {
+        const response = await request(app)
+            .put('/companies/apple')
+            .send({
+                "name" : "orange",
+                "description" : "A better tasting knock-off"
+            })
+        expect(response)
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toHaveProperty("Success.name", "orange")
+    })
+
+})
+
+describe("DELETE comapny", function(){
+    test("Delete Apple (hahahahaha)", async function(){
+        const response = await request(app).delete('/companies/apple')
+        expect(response);
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toHaveProperty("status", "deleted")
+    })
+})
 
 
 

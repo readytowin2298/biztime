@@ -28,7 +28,7 @@ router.get('/:code', async function(req, res, next){
             return res.json({"company" : company.rows[0]})
         }
         else{
-            res.status(404).json({"Error" : `Cannot locate ${code} in our databases`})
+            res.status(404).json({"ERROR" : `Cannot locate ${code} in our databases`})
             return new ExpressError(`Cannot locate ${code} in our databases`, 404)
         }
     } catch (err){
@@ -39,7 +39,7 @@ router.get('/:code', async function(req, res, next){
 router.post('/', async function(req, res, next){
     if(!req.body.code || !req.body.name ){
         res.status(404).json({
-            "Error" : "Input data missing",
+            "ERROR" : "Input data missing",
             "Example Request" : {
                 "code" : "nli",
                 "name" : "Nextlink Internet",
@@ -80,7 +80,7 @@ router.put('/:code', async function(req, res, next){
     } catch(err){
         return next(err)
     }
-    return res.json({"Success!" : {
+    return res.json({"Success" : {
         "name" : name,
         "code" : code,
         "description" : description
