@@ -24,8 +24,8 @@ router.get('/:id', async function(req, res, next){
             return res.json({"invoice" : company.rows[0]})
         }
         else{
-            res.status(404).json({"Error" : `Cannot locate ${id} in our databases`})
-            return new ExpressError(`Cannot locate ${id} in our databases`, 404)
+            return res.status(404).json({"ERROR" : `Cannot locate ${id} in our databases`})
+            //  new ExpressError(`Cannot locate ${id} in our databases`, 404)
         }
     } catch (err){
         return next(err)
@@ -47,7 +47,7 @@ router.post('/', async function(req, res, next){
     }catch(err){
         return next(err)
     }
-    return res.status(201).json(data.rows[0])
+    return res.status(201).json({"invoice" : data.rows[0]})
 })
 
 router.put('/:id', async function(req, res, next){
@@ -63,7 +63,7 @@ router.put('/:id', async function(req, res, next){
     }catch(err){
         return next(err)
     }
-    return res.json(data)
+    return res.json({"invoice" : data.rows[0]})
 })
 
 router.delete('/:id', async function(req, res, next){

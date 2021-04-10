@@ -24,7 +24,9 @@ router.get('/:code', async function(req, res, next){
     try{
         const code = req.params.code
         const company = await db.query(`SELECT * FROM companies WHERE code=$1`, [code])
-        if (company.rows.length >= 1){
+        const invoices = await(db.query(`SELECT * FROM invoices WHERE comp_code=$1`, [code]))
+        if (company.rows.length !== 0){
+            company.rows[0].invoices = invoices.rows
             return res.json({"company" : company.rows[0]})
         }
         else{
@@ -38,7 +40,7 @@ router.get('/:code', async function(req, res, next){
 
 router.post('/', async function(req, res, next){
     if(!req.body.code || !req.body.name ){
-        res.status(404).json({
+        res.status(400).json({
             "ERROR" : "Input data missing",
             "Example Request" : {
                 "code" : "nli",

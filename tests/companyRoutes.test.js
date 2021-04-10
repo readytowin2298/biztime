@@ -64,7 +64,7 @@ describe("POST to companies", function(){
                 "name" : "springboard",
                 "description" : "An Awesome School!"
             })
-        expect(response.statusCode).toBe(404);
+        expect(response.statusCode).toBe(400);
         expect(response.body).toHaveProperty("ERROR");
     })
 })
