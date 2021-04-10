@@ -70,7 +70,7 @@ describe("POST new invoice", function(){
 })
 
 describe("PUT invoice", function(){
-  test("Edit an invoice", async()=>{
+    test("Edit an invoice", async()=>{
         const invoices = await request(app).get('/invoices');
         const id = invoices.body.invoices[0].id
         const response = await request(app)
@@ -81,7 +81,30 @@ describe("PUT invoice", function(){
         expect(response);
         expect(response.statusCode).toBe(200);
         expect(response.body.invoice.amt).toBe(invoices.body.invoices[0].amt * 10)
-  })  
+    })  
+    test("Invalid input for edit", async ()=>{
+        const invoices = await request(app).get('/invoices')
+        const id = invoices.body.invoices[0].id
+        const response = await request(app)
+            .put(`/invoices/${id}`)
+            .send({
+                "fruit" : "orange"
+            })
+        expect(response.statusCode).toBe(400);
+        expect(response.body).toHaveProperty("ERROR")
+    })
+})
+
+describe("DELETE", function(){
+    test("DELETE an invoice", async ()=>{
+        const invoices = await request(app).get('/invoices');
+        const id = invoices.body.invoices[0].id
+        const response = await request(app).delete(`/invoices/${id}`)
+
+        expect(response);
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toHaveProperty('status')
+    })
 })
 
 

@@ -53,6 +53,9 @@ router.post('/', async function(req, res, next){
 router.put('/:id', async function(req, res, next){
     const {id} = req.params;
     const {amt} = req.body
+    if(!amt){
+        return res.status(400).json({"ERROR" : "Request must include an amount"})
+    }
     let data;
     try{
         let invoice = await db.query("SELECT * FROM invoices WHERE id=$1", [id])
